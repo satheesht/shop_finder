@@ -3,25 +3,35 @@ var app = angular.module("shops", []);
 
 app.controller('shops-ctrl',['$scope', '$http', function($scope,$http) {
   $scope.loaded=false;
-  $scope.loadMap = function(locations){
-    var map = new google.maps.Map(document.getElementById('map'), {
+  $scope.map=null;
+  $scope.locations=[];
+  $scope.cr_src=$("#source_init").val();
+
+  if('undefined'==$scope.cr_src || ''==$scope.cr_src) $scope.cr_src=1;
+
+
+  $scope.loadMap = function(){
+    $scope.map = new google.maps.Map(document.getElementById('map'), {
       zoom: 5,
-      center: locations[0]
+      center: $scope.locations[0]
     });
 
     var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-    var markers = locations.map(function(location, i) {
+    var markers = $scope.locations.map(function(location, i) {
       return new google.maps.Marker({
         position: location,
         label: labels[i % labels.length]
       });
     });
 
-    var markerCluster = new MarkerClusterer(map, markers,
+    var markerCluster = new MarkerClusterer($scope.map, markers,
         {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+
+        google.maps.event.trigger($scope.map, 'resize');
   }
-  $http.get('ajax/get_shops.php',{params:{'action':'get_shops_source_1'}})
+
+  $http.get('ajax/get_shops.php',{params:{'action':'get_shops_source_'+$scope.cr_src}})
     .then(function(response, status, header, config){
 
             //Parse json objecct
@@ -32,13 +42,13 @@ app.controller('shops-ctrl',['$scope', '$http', function($scope,$http) {
 
 
             //Load map by loading locations
-            var locations=[];
+            $scope.locations=[];
             var itr=null;
             for(var i=0;i<$scope.storeList.length;i++){
               itr = $scope.storeList[i];
-              locations.push({lat:itr.Lat,lng:itr.Long});
+              $scope.locations.push({lat:itr.Lat,lng:itr.Long});
             }
-            $scope.loadMap(locations);
+            $scope.loadMap();
 
             //Enable map div
             $scope.loaded=true;

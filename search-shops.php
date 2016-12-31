@@ -18,7 +18,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
-    <script src="js/shops.js"></script>
+    <script src="js/shops-nearby.js"></script>
 
     <style>
       .stores{
@@ -37,38 +37,33 @@
           right: 0px;
           top: 0;
       }
+      .services{
+        background-color: #f1ecec;
+border-radius: 5px;
+padding: 7px;
+font-size: 13px;
+list-style-type: none;
+      }
     </style>
   </head>
 
   <body ng-app="shops" ng-controller="shops-ctrl">
-
+    <input type="hidden" id='lat' value="<?php echo $_GET['lat'];?>">
+    <input type="hidden" id='lon' value="<?php echo $_GET['lon'];?>">
     <div class="container">
       <div class="header clearfix">
-        <nav>
-          <ul class="nav nav-pills pull-right">
-            <li role="presentation" class="active"><a href="#">List</a></li>
-            <li role="presentation"><a href="map-view.php">Map</a></li>
-            <li role="presentation">
 
-            </li>
-          </ul>
+        <h3 class="text-muted"><a href='index.php'>Shop Finder</a> &gt; <?php echo $_GET['name']?> &gt; Nearby Shops</h3>
 
-        </nav>
-        <h3 class="text-muted">Shop Finder</h3>
-        <div class="btn-group">
-          <button type="button" class="btn btn-danger">Address {{current_source}}</button>
-          <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="caret"></span>
-            <span class="sr-only">Toggle Dropdown</span>
-          </button>
-          <ul class="dropdown-menu">
-            <li ng-click="changeSource('source_1','Source 1')"><a href="#">Source 1</a></li>
-            <li ng-click="changeSource('source_2','Source 2')"><a href="#">Source 2</a></li>
-
-            
-          </ul>
-        </div>
       </div>
+
+      <div class="jumbotron">
+        <h1 style="font-size:40px;"><?php echo $_GET['name']?></h1>
+        <p class="lead"><?php echo $_GET['address']?><br><?php echo $_GET['city']?><br><?php echo $_GET['zip']?></p>
+      </div>
+
+      <h2 style="color:green;">Shops found withing 10KMs </h2>
+
       <div class="loader" ng-show="!loaded">
         <img  src="img/loader.gif"><br>
         Please wait...
@@ -81,22 +76,19 @@
         </div>
 
       </div>
-      <Br>
 
       <div class="row marketing">
 
           <div ng-repeat="store in storeList | filter:searchText" class="stores">
 
-          <h4>{{store.Name}}</h4>
-          <p>{{store.StreetAddress}},<br>{{store.City}},<br> {{store.PostalCode}}</p>
-          <div class="btn-group search-nearby-btn">
-            <a href="search-shops.php?lat={{store.Lat}}&lon={{store.Long}}&name={{store.Name}}&address={{store.StreetAddress}}&city={{store.City}}&zip={{store.PostalCode}}"><button type="button" class="btn btn-default">Search Nearby Shops <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
-          </div>
+          <h4>{{store.StoreName}}</h4>
+          <p>{{store.Address}},<br>{{store.Phone}},<br> {{store.PostalCode}}</p>
+          <ul class="services">
+            <li >{{store.Services.join(', ')}}</li>
+          </ul>
+          <a href="{{store.WeeklyOffersLink}}">Click here to view offers of the week!</a>
+
          </div>
-
-
-
-
 
       <footer class="footer">
         <p>&copy; 2017 Happy New Year!!</p>
