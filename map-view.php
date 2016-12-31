@@ -55,7 +55,7 @@
         <nav>
           <ul class="nav nav-pills pull-right">
             <li role="presentation" ><a href="index.php">List</a></li>
-            <li role="presentation" class="active"><a href="#">View Map</a></li>
+            <li role="presentation" class="active"><a href="#">Map</a></li>
           </ul>
         </nav>
         <h3 class="text-muted">Shop Finder</h3>
